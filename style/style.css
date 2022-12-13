@@ -1,0 +1,149 @@
+body {
+	font-family: 'Rubik';
+}
+
+#title {
+	margin: 20px 0 20px 25px;
+	font-family: 'PT Serif';
+	font-size: 300%;
+	font-weight: bold;
+}
+
+.input-basic {
+	float: left;
+}
+
+option {
+	font-family: 'Rubik';
+}
+
+.time {
+	margin: 0 0 15px 0;
+	padding: 10px;
+	border-radius: 10px;
+	box-shadow: #C0C0C0 0px 0px 10px;
+}
+
+.time-title {
+	font-size: 100%;
+	font-weight: 600;
+}
+
+.time-char {
+	font-size: 85%;
+	font-weight: 700;
+	text-align: center;
+}
+
+.time-time {
+	font-size: 110%;
+	font-weight: 800;
+	text-align: center;
+}
+
+.time-date {
+	font-size: 80%;
+	text-align: center;
+}
+
+.sun-detail {
+	margin: 10px 5px 0 22px;
+	padding: 10px;
+	min-height: 200px;
+	border-radius: 10px;
+	box-shadow: #C0C0C0 0px 0px 10px;
+}
+
+.img-overlay-wrap {
+	position: relative;
+	display: inline-block;
+	/* <= shrinks container to image size */
+	transition: transform 150ms ease-in-out;
+}
+
+.img-overlay-wrap img {
+	/* <= optional, for responsiveness */
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+.img-overlay-wrap svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+	-moz-appearance: textfield;
+}
+
+.ui-autocomplete {
+	margin: 0 5px; padding: 0;
+	width: 730px;
+	border: solid 1px #C0C0C0;
+	border-top: none;
+	background-color: #FFFFFF;
+	z-index: 10000000;
+}
+
+.ui-menu-item {
+	margin: 0;
+	padding: 3px 10px;
+	cursor: pointer;
+	list-style: none;
+}
+
+.ui-menu-item:hover {
+	margin: 0;
+	padding: 3px 10px;
+	background-color: #F0F0F0;
+	cursor: pointer;
+	list-style: none;
+}
+
+.ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.sun-period-block {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	min-width: 200px;
+}
+
+.title-coord-block {
+	margin: 15px 0;
+}
+
+.title-coord, .title-region {
+	margin: -5px 0;
+	padding: 0 5px;
+	font-size: 110%;
+	text-align: right;	
+}
+
+.title-region {
+	color: #404040;
+	font-size: 100%;
+}
+
+.input-special {
+	float: right;
+	margin-left: 6px;
+}

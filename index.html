@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Sun Diagram</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:light,normal,medium,semibold,bold">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:bold">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="style/style.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"
+		defer></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+		integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous" defer></script>
+	<!--<script src="lib/bootstrap-autocomplete/bootstrap-autocomplete.min.js" defer></script>-->
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" defer></script>
+	<script src="lib/suncalc/suncalc.js" defer></script>
+	<script src="lib/luxon/luxon.min.js" defer></script>
+	<script src="js/suncalc.js" defer></script>
+	<script src="js/caltools.js" defer></script>
+	<script src="js/geotools.js" defer></script>
+	<script src="js/display.js" defer></script>
+	<script src="js/workhours.js" defer></script>
+	<script src="js/core.js" defer></script>
+</head>
+
+<body>
+	<div class="container-lg">
+		<div class="row">
+			<div class="col-7">
+				<h1 id="title"></h1>
+			</div>
+			<div class="col-2">
+				<div class="title-coord-block">
+					<div class="title-region" id="region"></div>
+					<div class="title-coord" id="latitude"></div>
+					<div class="title-coord" id="longitude"></div>
+				</div>
+			</div>
+			<div class="col-3" id="parameters">
+				<div class="input-basic">Set</div>
+				<button type="button" class="btn btn-outline-secondary mt-2 input-special" data-bs-toggle="modal"
+					data-bs-target="#workHoursModal">
+					Work & Sleep
+				</button>
+				<button type="button" class="btn btn-outline-secondary mt-2 input-special" data-bs-toggle="modal"
+					data-bs-target="#localityModal">
+					City & Year
+				</button>
+				<input type="text" value="Paris" id="locality-field" class="form-control" hidden>
+				<input type="text" value="Paris" id="region-field" class="form-control" hidden>
+				<input type="number" value="48.853651" id="latitude-field" class="form-control" hidden>
+				<input type="number" value="2.349028" id="longitude-field" class="form-control" hidden>
+				<input type="number" value="35" id="elevation-field" class="form-control" hidden>
+				<input type="number" value="Europe/Paris" id="timezone-field" class="form-control" hidden>
+				<input type="number" value="2022" id="year-field" class="form-control" hidden>
+				<select class="form-select mt-2 input-special" id="repartition-select">
+					<option value="full" selected>Full</option>
+					<option value="simple">Simple</option>
+					<option value="photo">Photo</option>
+					<option value="geek">Geek</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-9">
+				<div id="field">
+					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-10 0 376 248" id="sun-diagram"
+						style="border: solid 0px #808080;" preserveAspectRatio="none"></svg>
+				</div>
+				<div class="sun-detail mt-3" style="font-size: 90%;" id="sun-daily-detail">
+					<div style="margin: 0px 5px; font-weight: bold; font-size: 20pt;" id="sun-daily-date"></div>
+					<div style="margin: 2px 5px;" id="sun-daily-date-desc"></div>
+					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-20 0 300 55" id="sun-daily-path"
+						preserveAspectRatio="none" style="float: left;">
+					</svg>
+					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-5 -10 250 20" id="sun-daily-stripe"
+						preserveAspectRatio="none" style="float: left;">
+					</svg>
+					<div id="sun-daily-periods"></div>
+				</div>
+				<div class="sun-detail mt-3" style="font-size: 90%;" id="sun-year-detail">
+					<div style="margin: 0px 5px; font-weight: bold; font-size: 20pt;" id="sun-year-period">Daylight
+					</div>
+					<div style="margin: 2px 5px;" id="sun-daily-date-desc"></div>
+					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-10 0 376 56" id="sun-year-plot"
+						preserveAspectRatio="none" style="float: left;">
+					</svg>
+					<div id="sun-year-conclusion"></div>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="row" id="sun-pies">
+					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-20 0 300 55" id="sun-daily-path"
+						preserveAspectRatio="none" style="float: left;">
+					</svg>
+				</div>
+				<div class="row" id="sun-durations"></div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="localityModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Choose city and year</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form>
+							<div class="input-group">
+								<input type="text" class="form-control w-50" placeholder="Start to type city name"
+									aria-label="City name for search" id="city-search">
+								<input type="number" class="form-control" placeholder="Year" aria-label="Year"
+									id="select-year" value="2022">
+							</div>
+						</form>
+						<div class="row mt-3">
+							<div class="col-1"></div>
+							<div class="col-6">
+								<div class="img-overlay-wrap" id="world-map-block">
+									<img src="images/service/Blue_Marble_2002.png" id="world-map-image" width="100%">
+									<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+										id="world-map-canvas" style="border: solid 0px #808080;"></svg>
+								</div>
+							</div>
+							<div class="col-4" id="Coordinates">
+								<div class="row">
+									<div class="col">
+										<span style="font-weight: 500; font-size: 140%;" id="select-city"></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<span style="font-size: 90%;" id="select-region"></span>
+									</div>
+								</div>
+								<div class="row mt-2">
+									<div class="col-5" style="font-weight: 400;">Latitude:</div>
+									<div class="col-7" style="font-weight: 500;" id="select-lat"></div>
+									<input id="select-lat-field" type="number" val="0" hidden>
+								</div>
+								<div class="row">
+									<div class="col-5">Longitude:</div>
+									<div class="col-7" style="font-weight: 500;" id="select-lon"></div>
+									<input id="select-lon-field" type="number" val="0" hidden>
+								</div>
+								<div class="row">
+									<div class="col-5">Elevation:</div>
+									<div class="col-7" style="font-weight: 500;" id="select-elev"></div>
+									<input id="select-elev-field" type="number" val="0" hidden>
+								</div>
+								<div class="row">
+									<!--<div class="col-5">Time zone:</div>
+									<div class="col-7" style="font-weight: 500;" id="select-zone"></div>-->
+									<input id="select-zone-field" type="number" val="Europe/Paris" hidden>
+								</div>
+								<!--<div class="row">
+									<div class="col">
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" value=""
+												id="flexCheckDefault" checked>
+											<label class="form-check-label" for="flexCheckDefault">Load elevation automatically</label>
+										</div>
+									</div>
+								</div>-->
+							</div>
+							<div class="col-1"></div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="apply-location" type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Choose
+							city</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="workHoursModal" tabindex="-1" aria-labelledby="work hours modal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Working and sleeping hours</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col"><strong>Work regime</strong></div>
+							<div class="col align-right">
+								<div class="input-group mb-3">
+									<input type="radio" name="work-regime" class="btn-check" id="work52" value="5/2">
+									<label class="btn btn-outline-secondary" for="work52" checked>5/2</label>
+									<input type="radio" name="work-regime" class="btn-check" id="work61" value="6/1">
+									<label class="btn btn-outline-secondary" for="work61">6/1</label>
+									<input type="radio" name="work-regime" class="btn-check" id="work22" value="2/2">
+									<label class="btn btn-outline-secondary" for="work22">2/2</label>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-1"></div>
+							<div class="col"><strong>Working hours</strong></div>
+							<div class="col-2">
+								<button type="button" class="btn btn-secondary" style="padding: 6px 6px 0 6px;"
+									id="work-add">
+									<span class="material-symbols-outlined">add</span>
+								</button>
+							</div>
+						</div>
+						<div id="work">
+						</div>
+						<div class="row mt-3">
+							<div class="col-1"></div>
+							<div class="col"><strong>Vacations</strong></div>
+							<div class="col-2">
+								<button type="button" class="btn btn-secondary" style="padding: 6px 6px 0 6px;"
+									id="vacation-add">
+									<span class="material-symbols-outlined">add</span>
+								</button>
+							</div>
+						</div>
+						<div id="vacation">
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row mt-3">
+							<div class="col-1"></div>
+							<div class="col"><strong>Sleeping hours</strong></div>
+							<div class="col-2">
+								<button type="button" class="btn btn-secondary" style="padding: 6px 6px 0 6px;"
+									id="sleep-add">
+									<span class="material-symbols-outlined">add</span>
+								</button>
+							</div>
+						</div>
+						<div id="sleep">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="apply-work-hours">Save
+							changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+</body>
+
+</html>
