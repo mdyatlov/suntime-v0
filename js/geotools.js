@@ -29,7 +29,7 @@ city_field.autocomplete({
 	source: function (request, response) {
 		//console.log(request.term);
 		$.ajax({
-			url: 'https://api.openweathermap.org/geo/1.0/direct?q=' + String(request.term).replace(/[^a-z0-9\s]/gi, '') + '&limit=5&appid=b63716abfb568c82a090e4123b60187e',
+			url: 'https://dyatlov.org/suntime/service/geocoding.php?query=' + String(request.term).replace(/[^a-z0-9\s]/gi, ''),
 			success: function (data) {
 				response(data);
 			}
@@ -99,12 +99,21 @@ function getElevation(latitude, longitude) {
 };
 
 function getTimeZone(latitude, longitude) {
-	let request = 'http://api.geonames.org/timezoneJSON?lat=' + latitude + '&lng=' + longitude + '&username=aristina';
+	let request = 'https://dyatlov.org/suntime/service/timezone.php?lat=' + latitude + '&lon=' + longitude;
+	console.log(request);
 	let timezone = 'Europe/Paris';
+
 	$.ajax({
 		url: request,
+		crossDomain: true,
 		success: function (data) {
+			console.log(data);
 			timezone = data.timezoneId;
+			choose_zone_field.val(timezone);
+			choose_zone_box.text(timezone);
+		},
+		error: function (error, status) {
+			console.log(status);
 			choose_zone_field.val(timezone);
 			choose_zone_box.text(timezone);
 		}

@@ -172,9 +172,12 @@ function getEvents(events_thread, index) {
 		}
 
 		// Filtering event pairs (à cause d'un problème au niveau de bibliothèque qui apporte les données astronomiques)
-		for (let i = 2; i < events_number; i += 2)
-			if (-1 == events[d][i] && events[d][0] != -i)
+		for (let i = 2; i < events_number; i += 2) {
+			if (-1 == events[d][i] && -i != events[d][0])
 				events[d][i + 1] = -1;
+			if (-1 == events[d][i + 1] && -(i + 1) != events[d][0])
+				events[d][i] = -1;
+		}
 	}
 
 	return events;
