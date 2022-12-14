@@ -22,11 +22,12 @@ function updateGeoData() {
 	elev_field.val(choose_elev_field.val());
 	year_field.val(choose_year_field.val());
 	zone_field.val(choose_zone_field.val());
+	//console.log(choose_zone_field.val());
 }
 
 city_field.autocomplete({
 	source: function (request, response) {
-		console.log(request.term);
+		//console.log(request.term);
 		$.ajax({
 			url: 'https://api.openweathermap.org/geo/1.0/direct?q=' + String(request.term).replace(/[^a-z0-9\s]/gi, '') + '&limit=5&appid=b63716abfb568c82a090e4123b60187e',
 			success: function (data) {

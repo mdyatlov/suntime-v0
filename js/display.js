@@ -214,7 +214,9 @@ function displaySunDurations(repartition, sum_durations, max_durations, min_dura
 	sun_durations_box.html("");
 
 	if (total_work_time > 0) {
-		let time = $('<div>').attr('class', 'time').attr('style', 'border-left: solid 8px ' + part_work[2] + ';');
+		let time = $('<div>').attr('class', 'time col').attr('style', 'border-left: solid 8px ' + part_work[2] + ';');
+		if (total_sleep_time > 0)
+			time.attr('style', 'margin-right: 15px; border-left: solid 8px ' + part_work[2] + ';');
 		colorbox = '<div style="border: solid 2px #202020; background: ' + part_work[2] + '; width: 16px; height: 16px; float: left; margin: 3px 5px 3px 3px;"></div>';
 		//time.append(colorbox);
 
@@ -226,13 +228,8 @@ function displaySunDurations(repartition, sum_durations, max_durations, min_dura
 		let colSum = $('<div>').attr('class', 'col');
 		colSum.append('<div class="time-char">Summary</div>');
 		colSum.append('<div class="time-time">' + total_work_time + separators["hour"] + '</div>');
+		colSum.append('<div class="time-date">' + (total_work_time / total_year_time * 100).toFixed(0) + '%</div>');
 		row.append(colSum);
-
-		let colPer = $('<div>').attr('class', 'col');
-		colPer.append('<div class="time-char">Percent</div>');
-		colPer.append('<div class="time-time">' + (total_work_time / total_year_time * 100).toFixed(0) + '%</div>');
-		colPer.append('<div class="time-date">' + total_work_days + ' ' + (1 == total_work_days % 10 ? 'day' : 'days') + '</div>');
-		row.append(colPer);
 
 		time.append(row);
 
@@ -240,7 +237,7 @@ function displaySunDurations(repartition, sum_durations, max_durations, min_dura
 	}
 
 	if (total_sleep_time > 0) {
-		let time = $('<div>').attr('class', 'time').attr('style', 'border-left: solid 8px ' + part_sleep[2] + ';');
+		let time = $('<div>').attr('class', 'time col').attr('style', 'border-left: solid 8px ' + part_sleep[2] + ';');
 		colorbox = '<div style="border: solid 2px #202020; background: ' + part_sleep[2] + '; width: 16px; height: 16px; float: left; margin: 3px 5px 3px 3px;"></div>';
 		//time.append(colorbox);
 
@@ -252,13 +249,8 @@ function displaySunDurations(repartition, sum_durations, max_durations, min_dura
 		let colSum = $('<div>').attr('class', 'col');
 		colSum.append('<div class="time-char">Summary</div>');
 		colSum.append('<div class="time-time">' + total_sleep_time + separators["hour"] + '</div>');
+		colSum.append('<div class="time-date">' + (total_sleep_time / total_year_time * 100).toFixed(0) + '%</div>');
 		row.append(colSum);
-
-		let colPer = $('<div>').attr('class', 'col');
-		colPer.append('<div class="time-char">Percent</div>');
-		colPer.append('<div class="time-time">' + (total_sleep_time / total_year_time * 100).toFixed(0) + '%</div>');
-		colPer.append('<div class="time-date">of the year</div>');
-		row.append(colPer);
 
 		time.append(row);
 
@@ -355,19 +347,21 @@ function drawDiagram() {
 
 // Draws the grid with months and hours
 function drawGrid() {
+	let content = "";
 	// Vertical grid for months
 	let pos = 0;
 	for (let i = 0; i <= 12; i++) {
-		sun_diagram_canvas.html(sun_diagram_canvas.html() + '<line x1="' + pos + '" x2="' + pos + '" y1="0" y2="240" stroke="' + grid_color + '" stroke-width="0.3" fill="none" />');
-		sun_diagram_canvas.html(sun_diagram_canvas.html() + '<text x="' + (pos + daysNumber(i) / 2) + '" y="246" fill="' + font_color + '" font-family="' + font_family + '" font-size="5" text-anchor="middle">' + monthNames[i] + '</text>');
+		content += '<line x1="' + pos + '" x2="' + pos + '" y1="0" y2="240" stroke="' + grid_color + '" stroke-width="0.3" fill="none" />';
+		content += '<text x="' + (pos + daysNumber(i) / 2) + '" y="246" fill="' + font_color + '" font-family="' + font_family + '" font-size="5" text-anchor="middle">' + monthNames[i] + '</text>';
 		pos += daysNumber(i);
 	}
 	// Horizontal grid for hours
 	for (let i = 0; i <= 24; i++) {
-		sun_diagram_canvas.html(sun_diagram_canvas.html() + '<line x1="0" x2="365" y1="' + i * 10 + '" y2="' + i * 10 + '" stroke="' + grid_color + '" stroke-width="0.3" fill="none" />');
+		content += '<line x1="0" x2="365" y1="' + i * 10 + '" y2="' + i * 10 + '" stroke="' + grid_color + '" stroke-width="0.3" fill="none" />';
 		if (i > 0 && i < 24)
-			sun_diagram_canvas.html(sun_diagram_canvas.html() + '<text x="-2" y="' + (i * 10 + 2) + '" fill="' + font_color + '" font-family="' + font_family + '" font-size="5" text-anchor="end">' + i + '</text>');
+			content += '<text x="-2" y="' + (i * 10 + 2) + '" fill="' + font_color + '" font-family="' + font_family + '" font-size="5" text-anchor="end">' + i + '</text>';
 	}
+	sun_diagram_canvas.html(sun_diagram_canvas.html() + content);
 }
 
 // Adapting the diagram depending on the window size
@@ -391,7 +385,7 @@ function displaySunPlot(figure, days, durations, color) {
 		path.push([days[i], (24 - durations[i])]);
 	}
 	path.push([days.length, 24]);
-	console.log(path);
+	//console.log(path);
 	let path_show = makeSvgPath(path, scaleX = 1, scaleY = 2);
 	content += '<polyline points="' + path_show + '" stroke="none" fill="' + color + '" fill-opacity="1"/>';
 
@@ -409,3 +403,38 @@ function displaySunPlot(figure, days, durations, color) {
 	}
 	figure.html(content);
 };
+
+function drawPieDiagram(figure, percents, colors, labels, scale = 1, normalize = true) {
+	let curPercent = 0;
+	let content = "";
+
+	const sum = percents.reduce((a, b) => (a + b));
+
+	for (let i = 0; i < percents.length; i++) {
+		if (normalize || sum > 1)
+			percents[i] /= sum;
+
+		const start_x = Math.cos(2 * Math.PI * curPercent) * scale;
+		const start_y = Math.sin(2 * Math.PI * curPercent) * scale;
+
+		curPercent += percents[i];
+
+		const end_x = Math.cos(2 * Math.PI * curPercent) * scale;
+		const end_y = Math.sin(2 * Math.PI * curPercent) * scale;
+
+		const large_arc_flag = percents[i] > .5 ? 1 : 0;
+		const path_string = [
+			`M ${start_x} ${start_y}`, // Move
+			`A ${scale} ${scale} 0 ${large_arc_flag} 1 ${end_x} ${end_y}`, // Arc
+			`L 0 0`, // Line
+		].join(' ');
+
+		content += '<path d="' + path_string + '" fill="' + colors[i] + '"></path>';
+	}
+	for (let i = 0; i < percents.length; i++) {
+		content += '<rect x="25" y="' + (- percents.length / 2 + i + 0.25) * 5 + '" width="2.5" height="2.5" fill="' + colors[i] + '" />';
+		content += '<text x="28.5" y="' + (- percents.length / 2 + i + 0.8) * 5 + '" fill="#404048" font-family="Rubik" font-size="4" text-anchor="left">' + labels[i] + '</text>';
+	}
+	figure.html(content);
+};
+

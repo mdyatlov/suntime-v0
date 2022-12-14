@@ -68,14 +68,14 @@ function addVacation() {
 	let start_day = $('<input>').attr('class', 'form-control').attr('type', 'number').attr('name', 'vacation-start-day-' + vacation_index).attr('id', 'vacation-start-day-' + vacation_index);
 	let start_month = $('<select>').attr('class', 'form-select').attr('id', 'vacation-start-month-' + vacation_index).change(restrainMonthDay);
 	for (let m = 0; m < 12; m++)
-		start_month.append($('<option>').val(m).text(monthNames[m]));
+		start_month.append($('<option>').val(m).text(monthShortNames[m]));
 	col_start.append(start_day).append(start_month);
 
 	let col_end = $('<div>').attr('class', 'col input-group').attr('id', 'vacation-end-' + vacation_index);
 	let end_day = $('<input>').attr('class', 'form-control').attr('width', '10%').attr('type', 'number').attr('name', 'vacation-end-day-' + vacation_index).attr('id', 'vacation-end-day-' + vacation_index);
 	let end_month = $('<select>').attr('class', 'form-select').attr('id', 'vacation-end-month-' + vacation_index).change(restrainMonthDay);
 	for (let m = 0; m < 12; m++)
-		end_month.append($('<option>').val(m).text(monthNames[m]));
+		end_month.append($('<option>').val(m).text(monthShortNames[m]));
 	col_end.append(end_day).append(end_month)
 
 	let col_del = $('<div>').attr('class', 'col-2').attr('id', 'vacation-del-' + vacation_index);

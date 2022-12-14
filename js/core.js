@@ -49,6 +49,8 @@ let pers_sum_durations = [], pers_max_durations = [], pers_min_durations = [], p
 let latitude = 0;
 let longitude = 0;
 let locality = '';
+let timezone = "Europe/Rome";
+//let timezone = 'America/Los_Angeles';
 
 // Setting the current day and year
 let day = dayOfYear(new Date());
@@ -190,7 +192,8 @@ function updateScreen() {
 	drawGrid();
 	displaySunDurations(pers_repartition, pers_sum_durations, pers_max_durations, pers_min_durations, pers_max_duration_days, pers_min_duration_days);
 	displaySunDailyPath();
-	displaySunPlot(sun_plot_box, days, pers_parts_durations.map(a => a[pers_repartition.length - 3]), "#BB2649");
+	displaySunPlot(sun_plot_box, days, pers_parts_durations.map(a => a[pers_repartition.length - 3]), "#6667AB");
+	drawPieDiagram($('#sun-pie-diagram'), pers_sum_durations, pers_repartition.map(a => a[2]), pers_repartition.map(a => a[4]), scale = 20);
 };
 
 function updateTitle() {
@@ -208,8 +211,8 @@ function updateValues() {
 	elevation = elev_field.val();
 	year = parseInt(year_field.val());
 	locality = loc_field.val();
-
-	//console.log(new Date(year, 6, 5, 23, 59, 0), SunCalc.getTimes(new Date(year, 4, 25, 23, 59, 0), latitude, longitude, elevation));
+	timezone = zone_field.val();
+	//console.log(timezone);
 
 	// Calculating year parameters and days vector
 	year_days = yearDaysNumber(year);
@@ -217,24 +220,17 @@ function updateValues() {
 	days = [...Array(year_days + 1).keys()];
 	days.shift();
 
-
-	[events_thread, events_days_index] = getEventsThread(lat_field.val(), lon_field.val(), elev_field.val(), year_field.val());
-	[periods_change_thread, periods_change_days_index] = getEventsThread(lat_field.val(), lon_field.val(), elev_field.val(), year_field.val(), [...Array(12).keys()].map(i => i + 2));
-	//[periods_thread, periods] = getEventsLine(lat_field.val(), lon_field.val(), elev_field.val(), year_field.val(), [...Array(12).keys()].map(i => i + 2));
+	[events_thread, events_days_index] = getEventsThread(latitude, longitude, elevation, year, timezone);
 	events = getEvents(events_thread, events_days_index).slice(0, year_days + 2);;
-	periods_durations = getDurations(periods_change_thread, periods_change_days_index).slice(0, year_days + 2);;
-	parts_durations = getPeriods(periods_durations, repartition).slice(0, year_days + 2);
+
+	[periods_change_thread, periods_change_days_index] = getEventsThread(latitude, longitude, elevation, year, timezone, [...Array(12).keys()].map(i => i + 2));
+	periods_durations = getPeriodsDurations(periods_change_thread, periods_change_days_index).slice(0, year_days + 2);;
+	parts_durations = getPartsDurations(periods_durations, repartition).slice(0, year_days + 2);
 	parts_durations = parts_durations.slice(0, year_days + 1);
 
 	[pers_periods_thread, pers_periods_days_index] = personalizeThread(periods_change_thread, work_days, work_times, event_code_work, sleep_times, event_code_sleep);
-	//console.log(pers_periods_thread, pers_periods_days_index);
-	pers_periods_durations = getDurations(pers_periods_thread, pers_periods_days_index).slice(0, year_days + 2);;
-	pers_parts_durations = getPeriods(pers_periods_durations, pers_repartition).slice(0, year_days + 2);
-	//console.log('pers parts dur', pers_parts_durations);
-	//console.log('events thread and index', events_thread, events_days_index);
-	//console.log('events', events);
-
-	//console.log('parts durations', parts_durations);
+	pers_periods_durations = getPeriodsDurations(pers_periods_thread, pers_periods_days_index).slice(0, year_days + 2);;
+	pers_parts_durations = getPartsDurations(pers_periods_durations, pers_repartition).slice(0, year_days + 2);
 
 	sum_durations = parts_durations.reduce((a, b) => a.map((x, i) => x + b[i]));
 	max_durations = parts_durations.reduce((a, b) => a.map((m, i) => m < b[i] ? b[i] : m));
@@ -242,7 +238,6 @@ function updateValues() {
 	pers_sum_durations = pers_parts_durations.reduce((a, b) => a.map((x, i) => x + b[i]));
 	pers_max_durations = pers_parts_durations.reduce((a, b) => a.map((m, i) => m < b[i] ? b[i] : m));
 	pers_min_durations = pers_parts_durations.reduce((a, b) => a.map((m, i) => m > b[i] ? b[i] : m));
-	//console.log('max durations', min_durations);
 
 	max_duration_days = getDaysWithPeriodValue(parts_durations, max_durations, [1, year_days], 0.000001);
 	min_duration_days = getDaysWithPeriodValue(parts_durations, min_durations, [1, year_days], 0.000001);

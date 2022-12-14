@@ -7,7 +7,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:light,normal,medium,semibold,bold">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:bold">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Serif+Display:regular">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="style/style.css">
@@ -20,7 +20,7 @@
 	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" defer></script>
 	<script src="lib/suncalc/suncalc.js" defer></script>
 	<script src="lib/luxon/luxon.min.js" defer></script>
-	<script src="js/suncalc.js" defer></script>
+	<script src="js/timecalc.js" defer></script>
 	<script src="js/caltools.js" defer></script>
 	<script src="js/geotools.js" defer></script>
 	<script src="js/display.js" defer></script>
@@ -56,7 +56,7 @@
 				<input type="number" value="48.853651" id="latitude-field" class="form-control" hidden>
 				<input type="number" value="2.349028" id="longitude-field" class="form-control" hidden>
 				<input type="number" value="35" id="elevation-field" class="form-control" hidden>
-				<input type="number" value="Europe/Paris" id="timezone-field" class="form-control" hidden>
+				<input type="text" value="Europe/Paris" id="timezone-field" class="form-control" hidden>
 				<input type="number" value="2022" id="year-field" class="form-control" hidden>
 				<select class="form-select mt-2 input-special" id="repartition-select">
 					<option value="full" selected>Full</option>
@@ -68,13 +68,21 @@
 		</div>
 		<div class="row">
 			<div class="col-9">
-				<div id="field">
+				<div class="sun-detail md-3" style="font-size: 90%;" id="sun-year-detail">
+					<div class="title" id="sun-year-period">Daylight</div>
+					<div class="subtitle"></div>
+					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-10 0 376 56" id="sun-year-plot"
+						preserveAspectRatio="none" style="float: left;">
+					</svg>
+					<div id="sun-year-conclusion"></div>
+				</div>
+				<div id="field" class="mt-3">
 					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-10 0 376 248" id="sun-diagram"
 						style="border: solid 0px #808080;" preserveAspectRatio="none"></svg>
 				</div>
-				<div class="sun-detail mt-3" style="font-size: 90%;" id="sun-daily-detail">
-					<div style="margin: 0px 5px; font-weight: bold; font-size: 20pt;" id="sun-daily-date"></div>
-					<div style="margin: 2px 5px;" id="sun-daily-date-desc"></div>
+				<div class="sun-detail mt-3 md-3" style="font-size: 90%;" id="sun-daily-detail">
+					<div class="title" id="sun-daily-date"></div>
+					<div class="subtitle" id="sun-daily-date-desc"></div>
 					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-20 0 300 55" id="sun-daily-path"
 						preserveAspectRatio="none" style="float: left;">
 					</svg>
@@ -83,21 +91,15 @@
 					</svg>
 					<div id="sun-daily-periods"></div>
 				</div>
-				<div class="sun-detail mt-3" style="font-size: 90%;" id="sun-year-detail">
-					<div style="margin: 0px 5px; font-weight: bold; font-size: 20pt;" id="sun-year-period">Daylight
-					</div>
-					<div style="margin: 2px 5px;" id="sun-daily-date-desc"></div>
-					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-10 0 376 56" id="sun-year-plot"
-						preserveAspectRatio="none" style="float: left;">
-					</svg>
-					<div id="sun-year-conclusion"></div>
-				</div>
 			</div>
 			<div class="col-3">
-				<div class="row" id="sun-pies">
-					<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-20 0 300 55" id="sun-daily-path"
-						preserveAspectRatio="none" style="float: left;">
-					</svg>
+				<div class="row">
+					<div class="row sun-pie" id="sun-pie">
+						<div class="time-title md-2">Sun periods distribution</div>
+						<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="-21 -25 92 50"
+							id="sun-pie-diagram" preserveAspectRatio="none" style="float: left;">
+						</svg>
+					</div>
 				</div>
 				<div class="row" id="sun-durations"></div>
 			</div>
@@ -155,9 +157,9 @@
 									<input id="select-elev-field" type="number" val="0" hidden>
 								</div>
 								<div class="row">
-									<!--<div class="col-5">Time zone:</div>
-									<div class="col-7" style="font-weight: 500;" id="select-zone"></div>-->
-									<input id="select-zone-field" type="number" val="Europe/Paris" hidden>
+									<div class="col-5">Time zone:</div>
+									<div class="col-7" style="font-weight: 500;" id="select-zone"></div>
+									<input id="select-zone-field" type="text" val="Europe/Paris" hidden>
 								</div>
 								<!--<div class="row">
 									<div class="col">

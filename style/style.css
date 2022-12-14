@@ -4,9 +4,27 @@ body {
 
 #title {
 	margin: 20px 0 20px 25px;
-	font-family: 'PT Serif';
+	font-family: 'DM Serif Display';
 	font-size: 300%;
 	font-weight: bold;
+}
+
+.sun-detail {
+	margin: 0 5px 0 22px;
+	padding: 10px;
+	min-height: 200px;
+	border-radius: 10px;
+	box-shadow: #C0C0C0 0px 0px 10px;
+}
+
+.sun-detail .title {
+	margin: 0 5px;
+	font-size: 160%;
+	font-weight: 600;
+}
+
+.sun-detail .subtitle {
+	margin: 2px 5px;
 }
 
 .input-basic {
@@ -46,13 +64,7 @@ option {
 	text-align: center;
 }
 
-.sun-detail {
-	margin: 10px 5px 0 22px;
-	padding: 10px;
-	min-height: 200px;
-	border-radius: 10px;
-	box-shadow: #C0C0C0 0px 0px 10px;
-}
+
 
 .img-overlay-wrap {
 	position: relative;
@@ -127,8 +139,19 @@ input[type=number] {
 	min-width: 200px;
 }
 
+.sun-pie {
+	margin: 0 0 15px 0;
+	padding: 10px;
+	border-radius: 10px;
+	box-shadow: #C0C0C0 0px 0px 10px;
+}
+
 .title-coord-block {
 	margin: 15px 0;
+}
+
+.title-coord {
+	font-weight: 400;
 }
 
 .title-coord, .title-region {

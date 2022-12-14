@@ -1,6 +1,11 @@
-function fractHours(time) {
+// Old function that worked with the JS Date objects
+/*function fractHours(time) {
 	return time.getHours() + time.getMinutes() / 60;
-};
+};*/
+
+function fractHours(time) {
+	return time.hour + time.minute / 60 + time.second / 3600;
+}
 
 function isLeap(year) {
 	year = parseInt(year);
@@ -88,10 +93,9 @@ function getHoursMinutes(hours) {
 var getRandomInt = (max => Math.floor(Math.random() * max));
 
 function dayToDate(day, year) {
-	let daysInYear = isLeap(year) ? 366 : 365;
+	let daysInYear = yearDaysNumber(year);
 	if (day < 1 || day > daysInYear)
 		throw new Error('Day ' + day + ' is not contained in year ' + year);
-
 
 	let month = 0;
 	while (day > daysNumber(month, isLeap(year))) {
