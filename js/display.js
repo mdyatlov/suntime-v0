@@ -376,9 +376,31 @@ function adaptFigureHeight(block, width, height) {
 var coordX = (xFigure => xFigure / sun_diagram_canvas.width() * sun_diagram_width - 11);
 var coordY = (yFigure => yFigure / sun_diagram_canvas.height() * sun_diagram_height);
 
-function displaySunPlot(figure, days, durations, color) {
+function displaySunPlot(figure, days, durations, color, highlight_level, highlight_color) {
 	content = "";
 	let path = [];
+
+	// highlighting the sun deficit periods
+	for (let i = 0; i < days.length; i++) {
+		// opening an interval
+		if (durations[i] < highlight_level && (durations[i - 1] > highlight_level || i == 0)) {
+		
+			path.push([days[i] - 1, 24]);
+			path.push([days[i] - 1, 0]);
+		}
+
+		// closing an interval
+		if (durations[i] < highlight_level && (durations[i + 1] > highlight_level || i == days.length - 1)) {
+		
+			path.push([days[i], 0]);
+			path.push([days[i], 24]);
+			let path_show = makeSvgPath(path, scaleX = 1, scaleY = 2);
+			path = [];
+			content += '<polyline points="' + path_show + '" stroke="none" fill="' + highlight_color + '" fill-opacity="0.3"/>';
+		}
+	}
+	
+	path = [];
 	path.push([0, 24]);
 	for (let i = 0; i < days.length; i++) {
 		path.push([days[i] - 1, (24 - durations[i])]);
@@ -388,6 +410,7 @@ function displaySunPlot(figure, days, durations, color) {
 	//console.log(path);
 	let path_show = makeSvgPath(path, scaleX = 1, scaleY = 2);
 	content += '<polyline points="' + path_show + '" stroke="none" fill="' + color + '" fill-opacity="1"/>';
+
 
 	let pos = 0;
 	for (let i = 0; i <= 12; i++) {
@@ -402,6 +425,11 @@ function displaySunPlot(figure, days, durations, color) {
 			content += '<text x="-2" y="' + (i * 8 + 2) + '" fill="' + font_color + '" font-family="' + font_family + '" font-size="5" text-anchor="end">' + (24 - i * 4) + '</text>';
 	}
 	figure.html(content);
+};
+
+function displayRecommendations(container) {
+	if (sun_deficit_days_number > 5)
+		container.html('You may have sun deficit for ' + sun_deficit_days_number + ' days this year. Ask your doctor whether you need some vitamin D.');
 };
 
 function drawPieDiagram(figure, percents, colors, labels, scale = 1, normalize = true) {

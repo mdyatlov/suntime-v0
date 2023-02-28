@@ -226,7 +226,6 @@ function getDaysWithPeriodValue(periods, values, limits, precision) {
 	}
 	return index;
 };
-
 //let zone = DateTime.local(2022, 1, 1, 12, 0, 0, { zone: "Europe/Paris" });
 //console.log(zone)
 

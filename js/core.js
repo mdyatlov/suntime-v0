@@ -30,9 +30,13 @@ const sun_path_canvas = $('#sun-daily-path');
 const sun_stripe_canvas = $('#sun-daily-stripe');
 const sun_periods_box = $('#sun-daily-periods');
 const sun_plot_box = $('#sun-year-plot');
+const sun_recommendations_box = $('#sun-year-conclusion');
 
 // Sun durations block
 const sun_durations_box = $('#sun-durations');
+
+// Sun deficit value (should be taken from a scientific article with a link)
+const sun_deficit_level = 0.5;  // hours
 
 // Assigning arrays for the calendar data
 let days = [];
@@ -192,12 +196,16 @@ function updateScreen() {
 	drawGrid();
 	displaySunDurations(pers_repartition, pers_sum_durations, pers_max_durations, pers_min_durations, pers_max_duration_days, pers_min_duration_days);
 	displaySunDailyPath();
-	displaySunPlot(sun_plot_box, days, pers_parts_durations.map(a => a[pers_repartition.length - 3]), "#6667AB");
+	displaySunPlot(sun_plot_box, days, pers_parts_durations.map(a => a[pers_repartition.length - 3]), "#6667AB", sun_deficit_level, "#BE3455");
+	displayRecommendations(sun_recommendations_box);
 	drawPieDiagram($('#sun-pie-diagram'), pers_sum_durations, pers_repartition.map(a => a[2]), pers_repartition.map(a => a[4]), scale = 20);
 };
 
 function updateTitle() {
-	header_title.text(locality + ' ' + year);
+	if (work_days.length == 0 && sleep_times.length == 0)
+		header_title.text(locality + ' ' + year);
+	else
+		header_title.text('My calendar ' + year);
 	lat_box.text(stringCoord(lat_field.val(), false));
 	lon_box.text(stringCoord(lon_field.val(), true));
 	reg_box.text(reg_field.val());
@@ -238,12 +246,15 @@ function updateValues() {
 	pers_sum_durations = pers_parts_durations.reduce((a, b) => a.map((x, i) => x + b[i]));
 	pers_max_durations = pers_parts_durations.reduce((a, b) => a.map((m, i) => m < b[i] ? b[i] : m));
 	pers_min_durations = pers_parts_durations.reduce((a, b) => a.map((m, i) => m > b[i] ? b[i] : m));
+	console.log(pers_parts_durations);
 
 	max_duration_days = getDaysWithPeriodValue(parts_durations, max_durations, [1, year_days], 0.000001);
 	min_duration_days = getDaysWithPeriodValue(parts_durations, min_durations, [1, year_days], 0.000001);
 	pers_max_duration_days = getDaysWithPeriodValue(pers_parts_durations, pers_max_durations, [1, year_days], 0.000001);
 	pers_min_duration_days = getDaysWithPeriodValue(pers_parts_durations, pers_min_durations, [1, year_days], 0.000001);
-
+	
 	total_work_time = pers_sum_durations[pers_sum_durations.length - 2];
 	total_sleep_time = pers_sum_durations[pers_sum_durations.length - 1];
+
+	sun_deficit_days_number = pers_parts_durations.map(a => a[pers_repartition.length - 3]).filter(x => x < sun_deficit_level).length;
 };
